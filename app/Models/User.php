@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
+use Request;
 use DB;
 
 class User extends Model implements AuthenticatableContract{
@@ -43,18 +44,27 @@ class User extends Model implements AuthenticatableContract{
     }
 
 
-    public static function saveUserMeta($request){
+    public static function saveUserMeta($request, $id = null){
 
-    	$user = new User();
+        if($id != null){
+            $user = User::findOrFail($id);
+        }else{
+            $user = new User();
+        }
+    	
         $user->role_id = 2;
         $user->username = $request->input('username');
         $user->email = $request->input('email');
         $user->password = bcrypt($request->input('password'));
         $user->is_active = true;
         $user->save();
-        $user->meta()->attach([ 1 => ['value'=>$request->input('fname')]]);
-        $user->meta()->attach([ 2 => ['value'=>$request->input('lname')]]);
-        $user->meta()->attach([ 3 => ['value'=>$request->input('gender')]]);
+
+        if($request->input('fname') && $request->input('lname') && $request->input('gender')){
+            $user->meta()->attach([ 1 => ['value'=>$request->input('fname')]]);
+            $user->meta()->attach([ 2 => ['value'=>$request->input('lname')]]);
+            $user->meta()->attach([ 3 => ['value'=>$request->input('gender')]]);
+        }
+        
 
         //Check if user was created
 		if ( ! $user->id)

@@ -13,7 +13,6 @@ class ProfileController extends Controller {
 
 		$users = User::where('username', $username)->get();
 
-
 		if(!$users){
 			abort(404);
 		}
@@ -29,8 +28,24 @@ class ProfileController extends Controller {
 		return view('profile.edit');
 	}
 
-	public function postEdit(){
+	public function postEdit(Request $request){
 
+		$this->validate($request, [
+			'username' => 'required|unique:users|alpha_dash|max:60',
+			'email' => 'required|unique:users|email|max:255',
+			'fname' => 'required|alpha_dash|max:60',
+			'lname' => 'required|alpha_dash|max:60',
+			'gender' => 'required',
+		]);
+
+
+		$created = User::saveUserMeta($request, \Auth::user()->id);
+
+		if($created){
+			return redirect()
+			->route('home')
+			->with('info','New user created successfully!');
+		}
 		
 	}
 

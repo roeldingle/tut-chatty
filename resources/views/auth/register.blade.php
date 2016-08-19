@@ -49,11 +49,6 @@
 							</div>
 						</div>
 
-
-						<input type="text" class="form-control" name="fname">
-						<input type="text" class="form-control" name="lname">
-						<input type="text" class="form-control" name="gender">
-
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
 								<button type="submit" class="btn btn-primary">
