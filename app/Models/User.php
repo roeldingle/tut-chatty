@@ -44,13 +44,8 @@ class User extends Model implements AuthenticatableContract{
     }
 
 
-    public static function saveUserMeta($request, $id = null){
+    public static function saveUserMeta($request, $user){
 
-        if($id != null){
-            $user = User::findOrFail($id);
-        }else{
-            $user = new User();
-        }
     	
         $user->role_id = 2;
         $user->username = $request->input('username');
@@ -58,6 +53,7 @@ class User extends Model implements AuthenticatableContract{
         $user->password = bcrypt($request->input('password'));
         $user->is_active = true;
         $user->save();
+        
 
         if($request->input('fname') && $request->input('lname') && $request->input('gender')){
             $user->meta()->attach([ 1 => ['value'=>$request->input('fname')]]);
@@ -156,7 +152,6 @@ class User extends Model implements AuthenticatableContract{
         return $this->friendsOfMine()->wherePivot('accepted', false)->get();
     }
 
-
     public function friendRequestsPending(){
         return $this->friendOf()->wherePivot('accepted', false)->get();
     }
@@ -166,7 +161,26 @@ class User extends Model implements AuthenticatableContract{
         return (bool) $this->friendRequestsPending()->where('id', $user->id)->count();
     }
 
+    public function hasFriendRequestReceived(User $user){
+        return (bool) $this->friendRequests()->where('id', $user->id)->count();
+    }
+
+    public function addFriend(User $user){
+        return $this->friendOf()->attach($user->id);
+    }
+
+    public function acceptFriendRequest(User $user){
+        return $this->friendRequests()->where('id', $user->id)->first()->pivot->update([ 'accepted' => true, ]);
+    }
+
+    public function isFriendsWith(User $user){
+
+        return (bool) $this->friends()->where('id', $user->id)->count();
+    }
+
 
 
 
 }
+
+

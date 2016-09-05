@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class FriendController extends Controller {
 
@@ -16,6 +17,67 @@ class FriendController extends Controller {
 		return view('friends.index')
 			->with('friends', $friends)
 			->with('requests', $requests);
+	}
+
+
+	public function getAdd($username){
+
+		$user = User::where('username', $username)->first();
+
+		if(!$user){
+			return redirect()
+			->route('home')
+			->with('info', 'That user could not be found');
+		}
+
+		if(\Auth::user()->hasFriendRequestsPending($user) || $user->hasFriendRequestsPending(\Auth::user())){
+
+			return redirect()
+			->route('profile.index', ['username' => $user->username])
+			->with('info', 'Friend request already pending');
+		}
+
+		if(\Auth::user()->isFriendsWith($user)){
+
+			return redirect()
+			->route('profile.index', ['username' => $user->username])
+			->with('info', 'You are already friends');
+		}
+
+
+		\Auth::user()->addFriend($user);
+
+		return redirect()
+			->route('profile.index', ['username' => $user->username])
+			->with('info', 'Friend request sent.');
+
+	}
+
+
+	public function getAccept($username){
+
+		$user = User::where('username', $username)->first();
+
+		if(!$user){
+			return redirect()
+			->route('home')
+			->with('info', 'That user could not be found');
+		}
+
+		if(!\Auth::user()->hasFriendRequestReceived($user)){
+
+			return redirect()
+			->route('home');
+		}
+
+		\Auth::user()->acceptFriendRequest($user);
+
+		return redirect()
+			->route('profile.index', ['username' => $user->username])
+			->with('info', 'Friend request accepted.');
+
+
+
 	}
 
 }

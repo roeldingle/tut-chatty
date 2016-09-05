@@ -17,15 +17,16 @@ class AuthController extends Controller {
 
 	public function postRegister(Request $request){
 
+		$user = new User();
 
 		$this->validate($request, [
 			'username' => 'required|unique:users|alpha_dash|max:60',
 			'email' => 'required|unique:users|email|max:255',
-			'password' => 'required|min:6',
-			'password_confirmation' => 'required|min:6|same:password',
+			'password' => 'required|min:3',
+			'password_confirmation' => 'required|min:3|same:password',
 		]);
 
-		$created = User::saveUserMeta($request);
+		$created = User::saveUserMeta($request, $user);
 
 		if($created){
 			return redirect()

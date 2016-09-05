@@ -31,16 +31,25 @@ class ProfileController extends Controller {
 
 	public function postEdit(Request $request){
 
+		if(\Auth::user()->id){
+            $user = User::findOrFail(\Auth::user()->id);
+        }else{
+            $user = new User();
+        }
+
+
 		$this->validate($request, [
-			'username' => 'required|unique:users|alpha_dash|max:60',
-			'email' => 'required|unique:users|email|max:255',
+			'username' => 'required|alpha_dash|max:60|unique:users,username,'.$user->id,
+			'email' => 'required|email|max:255|unique:users,email,'.$user->id,
 			'fname' => 'required|alpha_dash|max:60',
 			'lname' => 'required|alpha_dash|max:60',
 			'gender' => 'required',
 		]);
 
 
-		$created = User::saveUserMeta($request, \Auth::user()->id);
+
+		$created = User::saveUserMeta($request, $user);
+
 
 		if($created){
 			return redirect()
