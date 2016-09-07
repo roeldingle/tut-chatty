@@ -1,36 +1,29 @@
 <?php namespace App\Http\Controllers;
 
+use Auth;
+use App\Models\Status;
+
 class HomeController extends Controller {
 
-	/*
-	|--------------------------------------------------------------------------
-	| Home Controller
-	|--------------------------------------------------------------------------
-	|
-	| This controller renders your application's "dashboard" for users that
-	| are authenticated. Of course, you are free to change or remove the
-	| controller as you wish. It is just here to get your app started!
-	|
-	*/
-
-	/**
-	 * Create a new controller instance.
-	 *
-	 * @return void
-	 */
-	// public function __construct()
-	// {
-	// 	$this->middleware('auth');
-	// }
-
-	/**
-	 * Show the application dashboard to the user.
-	 *
-	 * @return Response
-	 */
 	public function index()
 	{
-		return view('home');
+
+		if(Auth::check()){
+
+
+			$statuses = Status::notReply()->where(function($query){
+				return $query->where('user_id', Auth::user()->id)
+				->orWhereIn('user_id', Auth::user()->friends()->lists('id'));
+			})
+			->orderBy('created_at', 'desc')
+			->paginate(4);
+
+			return view('timeline.index')
+			->with(['page' => 'Timeline'])
+			->with('statuses', $statuses);
+		}
+
+		return view('home')->with(['page' => 'Home']);
 	}
 
 }

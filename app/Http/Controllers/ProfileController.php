@@ -5,7 +5,9 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
+use Auth;
 use App\Models\User;
+use App\Models\Status;
 
 class ProfileController extends Controller {
 
@@ -13,13 +15,17 @@ class ProfileController extends Controller {
 
 		$users = User::where('username', $username)->get();
 
+
 		if(!$users){
 			abort(404);
 		}
 
+		$statuses = $users->first()->statuses()->notReply()->get();
 
 		return view('profile.index')
-			->with('users',$users);
+			->with('users',$users)
+			->with('statuses',$statuses)
+			->with('authUserIsFriend', Auth::user()->isFriendsWith($users->first()));
 
 	}
 
@@ -31,8 +37,8 @@ class ProfileController extends Controller {
 
 	public function postEdit(Request $request){
 
-		if(\Auth::user()->id){
-            $user = User::findOrFail(\Auth::user()->id);
+		if(Auth::user()->id){
+            $user = User::findOrFail(Auth::user()->id);
         }else{
             $user = new User();
         }

@@ -130,6 +130,15 @@ class User extends Model implements AuthenticatableContract{
     }
 
     /*
+        Users statuses relationship
+    */
+    public function statuses()
+    {
+        return $this->hasMany('App\Models\Status','user_id');
+    }
+
+
+    /*
         Friends
     */
 

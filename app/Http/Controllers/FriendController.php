@@ -13,7 +13,6 @@ class FriendController extends Controller {
 		$friends = \Auth::user()->friends();
 		$requests = \Auth::user()->friendRequests();
 
-
 		return view('friends.index')
 			->with('friends', $friends)
 			->with('requests', $requests);
@@ -59,6 +58,7 @@ class FriendController extends Controller {
 		$user = User::where('username', $username)->first();
 
 		if(!$user){
+			
 			return redirect()
 			->route('home')
 			->with('info', 'That user could not be found');
@@ -75,8 +75,6 @@ class FriendController extends Controller {
 		return redirect()
 			->route('profile.index', ['username' => $user->username])
 			->with('info', 'Friend request accepted.');
-
-
 
 	}
 
