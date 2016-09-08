@@ -20,7 +20,7 @@ class ProfileController extends Controller {
 			abort(404);
 		}
 
-		$statuses = $users->first()->statuses()->notReply()->get();
+		$statuses = $users->first()->statuses()->notReply()->orderBy('created_at', 'desc')->get();
 
 		return view('profile.index')
 			->with('users',$users)

@@ -4,13 +4,13 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			<div class="panel panel-default">
+			<!-- <div class="panel panel-default">
 				<div class="panel-heading">Friends</div>
 
-				<div class="panel-body">
+				<div class="panel-body"> -->
+					<h2>Friends</h2>
 					<div class="row">
 						<div class="col-lg-5">
-							<h2>Your Friends </h2>
 							@if (!$friends->count())
 								<p>No friends yet</p>
 							@else
@@ -99,9 +99,9 @@
 							@endif
 
 						</div>
-					</div>
+					<!-- </div>
 				</div>
-			</div>
+			</div> -->
 		</div>
 	</div>
 

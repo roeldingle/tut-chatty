@@ -59,6 +59,7 @@ class User extends Model implements AuthenticatableContract{
             $user->meta()->attach([ 1 => ['value'=>$request->input('fname')]]);
             $user->meta()->attach([ 2 => ['value'=>$request->input('lname')]]);
             $user->meta()->attach([ 3 => ['value'=>$request->input('gender')]]);
+            $user->meta()->attach([ 4 => ['value'=>$request->input('avatar')]]);
         }
         
 
@@ -90,7 +91,9 @@ class User extends Model implements AuthenticatableContract{
 
     	$users = User::where($where['key'], $where['value'])->get()->map(function($user){
             foreach($user->meta as $meta) {
-                $user->setAttribute($meta->key ,$meta->pivot['value']);
+
+                $value = (!$meta->pivot['value']) ? '' : $meta->pivot['value'];
+                $user->setAttribute($meta->key ,$value);
             }
             unset($user->meta);
             return $user;
@@ -126,7 +129,21 @@ class User extends Model implements AuthenticatableContract{
     }
 
     public function getAvatarUrl(){
-        return "https://www.gravatar.com/avatar/{{md5($this->email)}}?d=mm&s=60";
+
+        //return "https://www.gravatar.com/avatar/{{md5($this->email)}}?d=mm&s=60";
+        return $this->meta()->where('meta_id', '4')->first()->pivot['value'];
+        
+    }
+
+     public function getAvatarUrlById($user_id){
+
+        $user = User::findOrFail($user_id);
+
+        if(!$return = $user->meta()->where('meta_id', '4')->first()->pivot['value']){
+            return "https://www.gravatar.com/avatar/{{md5($this->email)}}?d=mm&s=60";
+        }
+
+        return $return;
     }
 
     /*

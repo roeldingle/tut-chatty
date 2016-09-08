@@ -4,9 +4,9 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			<div class="panel panel-default">
+			<!-- <div class="panel panel-default">
 				<div class="panel-heading">{{$page}}</div>
-				<div class="panel-body">
+				<div class="panel-body"> -->
 					<form role="form" action="{{ route('status.post') }}" method="POST">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						<div class="row status-form">
@@ -26,7 +26,7 @@
 								
 									<div class="status-item">
 										<a class="avatar pull-left" href="{{ route('profile.index', ['username' => $status->user->username ]) }}">
-											<img class="" alt="" src="{{ $status->user->getAvatarUrl() }}" />
+											<img class="profile-img" alt="" src="{{ $status->user->getAvatarUrl() }}" />
 										</a>
 										<div class="" style="margin-left:10%">
 											<h4 class="">
@@ -44,7 +44,7 @@
 										@foreach ($status->replies as $reply)
 											
 												<a class="avatar pull-left" href="{{ route('profile.index', ['username' => $reply->user->username ]) }}">
-													<img class="" alt="" src="{{ $reply->user->getAvatarUrl() }}" />
+													<img class="profile-img" alt="" src="{{ Auth::user()->getAvatarUrlById($reply->user->id) }}" />
 												</a>
 												<div class="" style="margin-left:10%">
 													<h5 class="">
@@ -80,9 +80,9 @@
 								{!! $statuses->render() !!}
 							@endif
 						</div>
-					</div>
+					<!-- </div>
 				</div>
-			</div>
+			</div> -->
 		</div>
 	</div>
 

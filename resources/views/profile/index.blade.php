@@ -4,13 +4,13 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			<div class="panel panel-default">
+			<!-- <div class="panel panel-default">
 				<div class="panel-heading">Profile</div>
-
-				<div class="panel-body">
+				<div class="panel-body"> -->
 					<div class="row">
-						<div class="col-lg-5">
+						<div class="col-lg-8">
 
+							<!-- User profile -->
 							@foreach($users as $key=>$user)
 
 							 <?php 
@@ -23,17 +23,20 @@
 							 	$person = Auth::user()->getUserMeta($where)->first(); 
 
 							 ?>
+							 <h2>{{ $person->fname }}'s Profile</h2>
 							 <div class="panel panel-default" >
 							 	<div class="panel-body">
 
 							 		<a href="{{ route('profile.index',['username' => $person->username]) }}">
-								 		<img alt="" style="margin-right:10px" src="{{ $user->getAvatarUrl() }}" class="pull-left">
+								 		<img alt="" style="margin-right:10px" src="{{ $user->getAvatarUrl() }}" class="profile-img pull-left">
 								 	</a>
 							        <div class="pull-left">
 							          <h4 class="media-heading">
 										<a href="{{ route('profile.index',['username' => $person->username]) }}">{{ $person->fname }} {{ $person->lname }}</a>
 									</h4>
-							          <span class="testimonials-post">{{ $person->username }}</span>
+							          <p class="testimonials-post">{{ $user->email }}</p>
+							          <p class="testimonials-post">{{ $person->username }}</p>
+							          <p class="testimonials-post">{{ $person->gender }}</p>
 							        </div>
 
 								</div>
@@ -41,10 +44,78 @@
 
 							@endforeach
 
-							
+
+							<!-- Status -->
+							<div class="row">
+								<div class="status-container">
+									@if (!$statuses->count())
+										<p>Has not yet posted anything yet</p>
+									@else
+										@foreach ($statuses as $status)
+										
+											<div class="status-item">
+												<a class="avatar pull-left" href="{{ route('profile.index', ['username' => $status->user->username ]) }}">
+													<img class="profile-img" alt="" src="{{ $status->user->getAvatarUrl() }}" />
+												</a>
+												<div class="" style="margin-left:10%">
+													<h4 class="">
+														<a href="{{ route('profile.index', ['username' => $status->user->username ]) }}">{{$status->user->getFullName()}}</a>
+													</h4>
+													<p class="status-content">{{ $status->body }}</p>
+													<ul class="list-inline">
+														<li>{{ $status->created_at->diffForHumans() }}</li>
+														<li><a href="">Like</a></li>
+														<li>10 likes</li>
+													</ul>
+												</div>
+
+												<div class="status-reply">
+												@foreach ($status->replies as $reply)
+										
+														<a class="avatar pull-left" href="{{ route('profile.index', ['username' => $reply->user->username ]) }}">
+															<img class="profile-img" alt="" src="{{ Auth::user()->getAvatarUrlById($reply->user->id) }}" />
+														</a>
+														<div class="" style="margin-left:10%">
+															<h5 class="">
+																<a href="{{ route('profile.index', ['username' => $reply->user->username ]) }}">{{$reply->user->getFullName()}}</a>
+															</h5>
+															<p class="status-content">{{ $reply->body }}</p>
+															<ul class="list-inline">
+																<li>{{ $reply->created_at->diffForHumans() }}</li>
+																<li><a href="">Like</a></li>
+																<li>10 likes</li>
+															</ul>
+														</div>
+													
+												@endforeach
+
+												@if($authUserIsFriend || Auth::user()->id === $status->user->id)
+													<form role="form" action="{{ route('status.reply', ['statusId' => $status->id]) }}" method="POST">
+														<input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+														<div class="row status-form">
+															<textarea placeholder="Reply to this status"  name="reply-{{ $status->id }}" rows="2" class='col-md-12{{ $errors->has("reply-{$status->id}") ? " red-border" : "" }}'></textarea>
+														</div>
+														<div class="row">
+															<input type="submit" value="Reply" class="reply-btn btn btn-default btn-sm" />
+														</div>
+													</form>
+												
+												@endif
+												</div>
+
+											</div>
+										@endforeach
+										
+									@endif
+									</div>
+								</div>
+								<!-- end Status -->
+
+
 
 						</div>
-						<div class="col-lg-4 col-lg-offset-3">
+						<div class="col-lg-4">
 
 							@if (Auth::user()->hasFriendRequestsPending($users->first()))
 								<p>Waiting for {{$users->first()->getFullName()}} to accept friend request</p>
@@ -58,7 +129,7 @@
 								@endif
 							@endif
 
-							<h3>{{ $users->first()->getFullName() }}'s Friends</h3>
+							<h3>Friends</h3>
 
 							@if (!$users->first()->friends()->count())
 								<p>No friends yet</p>
@@ -79,7 +150,7 @@
 									 	<div class="panel-body">
 
 									 		<a href="{{ route('profile.index',['username' => $person->username]) }}">
-										 		<img alt="" style="margin-right:10px" src="{{ $user->getAvatarUrl() }}" class="pull-left">
+										 		<img alt="" style="margin-right:10px" src="" class="pull-left">
 										 	</a>
 									        <div class="pull-left">
 									          <h4 class="media-heading">
@@ -94,9 +165,9 @@
 								
 							@endif
 						</div>
-					</div>
+				<!-- 	</div>
 				</div>
-			</div>
+			</div> -->
 		</div>
 	</div>
 

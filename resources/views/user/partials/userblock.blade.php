@@ -14,7 +14,7 @@
  	<div class="panel-body">
 
  		<a href="{{ route('profile.index',['username' => $person->username]) }}">
-	 		<img alt="" style="margin-right:10px" src="{{ $user->getAvatarUrl() }}" class="pull-left">
+	 		<img alt="" style="margin-right:10px" src="{{ $user->getAvatarUrl($user->id) }}" class="pull-left">
 	 	</a>
         <div class="pull-left">
           <h4 class="media-heading">

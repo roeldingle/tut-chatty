@@ -81,6 +81,14 @@
 				    		</div>
 				    	</div>
 
+				    	<!-- Text input-->
+				          <div class="form-group{{ $errors->has('avatar') ? ' has-error' : '' }}">
+				            <!-- <label class="col-sm-2 control-label" for="textinput">E-Mail Address</label> -->
+				            <div class="col-sm-8 col-sm-offset-2">
+				              <input type="text" class="form-control" placeholder="Set an Avatar URL" name="avatar" value="{{ old('avatar') ?: $person->avatar }}">
+				            </div>
+				          </div>
+
 
 				          <!-- Text input--
 				          <div class="form-group">

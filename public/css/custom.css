@@ -7,6 +7,11 @@
 .list-inline{margin:10px 0}
 textarea{padding:5px 0;}
 
-.status-reply{padding:10px;background:#f5f5f5;}
+.status-reply{padding:10px;/*background:#f5f5f5;*/}
 .status-reply a {text-align:center;}
 .status-reply img{width:80%;}
+
+/*profile*/
+.profile-img{width:100px;height:100px;}
+.status-item .profile-img {width:70px;height:70px;}
+.status-reply .profile-img {width:50px;height:50px;}
