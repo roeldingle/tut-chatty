@@ -31,6 +31,12 @@ class MetaTableSeeder extends Seeder
         $meta3->label = 'Gender';
         $meta3->type = 'radio';
         $meta3->save();
+
+        $meta3 = new Meta();
+        $meta3->key = 'avatar';
+        $meta3->label = 'Avatar';
+        $meta3->type = 'text';
+        $meta3->save();
         
     }
 }

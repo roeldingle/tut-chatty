@@ -1,8 +1,8 @@
 <?php namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Status;
 use App\Models\User;
+use App\Models\Like;
 
 class Status extends Model {
 
@@ -22,14 +22,17 @@ class Status extends Model {
 
 
     public function scopeNotReply($query){
-
         return $query->whereNull('parent_id');
     }
 
 
     public function replies(){
-
         return $this->hasMany('App\Models\Status','parent_id');
+    }
+
+    public function likes()
+    {
+        return $this->morphMany('App\Models\Like', 'likeable');
     }
 
 }

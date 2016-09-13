@@ -5,8 +5,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
+use App\Models\Status;
+use App\Models\Like;
 use Request;
 use DB;
+
+
 
 class User extends Model implements AuthenticatableContract{
 
@@ -73,6 +77,34 @@ class User extends Model implements AuthenticatableContract{
 		return true;
     }
 
+    public static function editUserMeta($request, $user){
+
+        
+        $user->role_id = 2;
+        $user->username = $request->input('username');
+        $user->email = $request->input('email');
+        $user->is_active = true;
+
+        $saved = $user->save();
+
+        $metaData = [
+            1 => ['value'=>$request->input('fname')],
+            2 => ['value'=>$request->input('lname')],
+            3 => ['value'=>$request->input('gender')],
+            4 => ['value'=>$request->input('avatar')]
+
+        ];
+
+        $synched = $user->meta()->sync($metaData);
+        
+        if($saved && $synched){
+            return true;
+        }else{
+            return false;
+        }
+        
+    }
+
 
     public static function getAllUserMeta(){
 
@@ -130,8 +162,10 @@ class User extends Model implements AuthenticatableContract{
 
     public function getAvatarUrl(){
 
-        //return "https://www.gravatar.com/avatar/{{md5($this->email)}}?d=mm&s=60";
-        return $this->meta()->where('meta_id', '4')->first()->pivot['value'];
+        if(!$return = $this->meta()->where('meta_id', '4')->first()->pivot['value']){
+            return "https://www.gravatar.com/avatar/{{md5($this->email)}}?d=mm&s=60";
+        }
+        return $return;
         
     }
 
@@ -153,6 +187,12 @@ class User extends Model implements AuthenticatableContract{
     {
         return $this->hasMany('App\Models\Status','user_id');
     }
+
+     public function likes()
+    {
+        return $this->hasMany('App\Models\Like','user_id');
+    }
+
 
 
     /*
@@ -202,6 +242,16 @@ class User extends Model implements AuthenticatableContract{
     public function isFriendsWith(User $user){
 
         return (bool) $this->friends()->where('id', $user->id)->count();
+    }
+
+
+    public function hasLikedStatus(Status $status){
+
+        return (bool) $status
+        ->likes
+        ->where('user_id', $this->id)
+        ->count();
+
     }
 
 

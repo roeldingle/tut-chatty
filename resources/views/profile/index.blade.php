@@ -22,25 +22,30 @@
 
 							 	$person = Auth::user()->getUserMeta($where)->first(); 
 
+
 							 ?>
-							 <h2>{{ $person->fname }}'s Profile</h2>
-							 <div class="panel panel-default" >
-							 	<div class="panel-body">
+							 @if (!$person->count())
+							 	<p>Please update profile info</p>
+							 @else
+								 <h2>{{ $person->fname }}'s Profile</h2>
+								 <div class="panel panel-default" >
+								 	<div class="panel-body">
 
-							 		<a href="{{ route('profile.index',['username' => $person->username]) }}">
-								 		<img alt="" style="margin-right:10px" src="{{ $user->getAvatarUrl() }}" class="profile-img pull-left">
-								 	</a>
-							        <div class="pull-left">
-							          <h4 class="media-heading">
-										<a href="{{ route('profile.index',['username' => $person->username]) }}">{{ $person->fname }} {{ $person->lname }}</a>
-									</h4>
-							          <p class="testimonials-post">{{ $user->email }}</p>
-							          <p class="testimonials-post">{{ $person->username }}</p>
-							          <p class="testimonials-post">{{ $person->gender }}</p>
-							        </div>
+								 		<a href="{{ route('profile.index',['username' => $person->username]) }}">
+									 		<img alt="" style="margin-right:10px" src="{{ $user->getAvatarUrl() }}" class="profile-img pull-left">
+									 	</a>
+								        <div class="pull-left">
+								          <h4 class="media-heading">
+											<a href="{{ route('profile.index',['username' => $person->username]) }}">{{ $person->fname }} {{ $person->lname }}</a>
+										</h4>
+								          <p class="testimonials-post">{{ $user->email }}</p>
+								          <p class="testimonials-post">{{ $person->username }}</p>
+								          <p class="testimonials-post">{{ $person->gender }}</p>
+								        </div>
 
+									</div>
 								</div>
-							</div>
+							@endif
 
 							@endforeach
 
@@ -64,8 +69,8 @@
 													<p class="status-content">{{ $status->body }}</p>
 													<ul class="list-inline">
 														<li>{{ $status->created_at->diffForHumans() }}</li>
-														<li><a href="">Like</a></li>
-														<li>10 likes</li>
+							
+														<li>{{ $status->likes->count() }} {{ str_plural('like', $status->likes->count()) }}</li>
 													</ul>
 												</div>
 
@@ -82,8 +87,10 @@
 															<p class="status-content">{{ $reply->body }}</p>
 															<ul class="list-inline">
 																<li>{{ $reply->created_at->diffForHumans() }}</li>
-																<li><a href="">Like</a></li>
-																<li>10 likes</li>
+																@if($reply->user->id !== Auth::user()->id)
+																	<li><a href="{{ route('status.like', ['statusId' => $reply->id ]) }}">Like</a></li>
+																@endif
+																<li>{{ $reply->likes->count() }} {{ str_plural('like', $reply->likes->count()) }}</li>
 															</ul>
 														</div>
 													
@@ -120,9 +127,13 @@
 							@if (Auth::user()->hasFriendRequestsPending($users->first()))
 								<p>Waiting for {{$users->first()->getFullName()}} to accept friend request</p>
 							@elseif (Auth::user()->hasFriendRequestReceived($users->first()))
-								<a href="{{ route('friend.accept' , ['username' => $users->first()->username])}}" class="btn btn-primary">Accept friend request</a>
+								<a href="{{ route('friend.accept' , ['username' => $users->first()->username] )}}" class="btn btn-primary">Accept friend request</a>
 							@elseif (Auth::user()->isFriendsWith($users->first()))
 								<p>You are friends with {{$users->first()->getFullName()}}</p>
+								<form method="POST" action="{{ route('friend.delete' , ['username' => $users->first()->username] )}}">
+									<input type="hidden" name="_token" value="{{ csrf_token() }}">
+									<input type="submit" name="delete-friend" value="Unfriend" class="btn btn-primary">
+								</form>
 							@else
 								@if(Auth::user()->id != $users->first()->id)
 									<a href="{{ route('friend.add' , ['username' => $users->first()->username])}}" class="btn btn-primary">Add as friend</a>
@@ -150,7 +161,7 @@
 									 	<div class="panel-body">
 
 									 		<a href="{{ route('profile.index',['username' => $person->username]) }}">
-										 		<img alt="" style="margin-right:10px" src="" class="pull-left">
+										 		<img alt="" style="margin-right:10px" src="{{ $person->getAvatarUrl() }}" class="pull-left profile-img">
 										 	</a>
 									        <div class="pull-left">
 									          <h4 class="media-heading">

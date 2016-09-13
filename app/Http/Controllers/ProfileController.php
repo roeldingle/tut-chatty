@@ -16,6 +16,7 @@ class ProfileController extends Controller {
 		$users = User::where('username', $username)->get();
 
 
+
 		if(!$users){
 			abort(404);
 		}
@@ -37,11 +38,7 @@ class ProfileController extends Controller {
 
 	public function postEdit(Request $request){
 
-		if(Auth::user()->id){
-            $user = User::findOrFail(Auth::user()->id);
-        }else{
-            $user = new User();
-        }
+		$user = User::findOrFail(Auth::user()->id);
 
 
 		$this->validate($request, [
@@ -50,17 +47,18 @@ class ProfileController extends Controller {
 			'fname' => 'required|alpha_dash|max:60',
 			'lname' => 'required|alpha_dash|max:60',
 			'gender' => 'required',
+			'avatar' => 'required',
 		]);
 
 
 
-		$created = User::saveUserMeta($request, $user);
+		$created = User::editUserMeta($request, $user);
 
 
 		if($created){
 			return redirect()
 			->route('home')
-			->with('info','New user created successfully!');
+			->with('info','Profile updated successfully!');
 		}
 		
 	}

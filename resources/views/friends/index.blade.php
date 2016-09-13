@@ -33,7 +33,7 @@
 									 			<p>---</p>
 									 		@else
 									 			<a href="{{ route('profile.index',['username' => $person->username]) }}">
-											 		<img alt="" style="margin-right:10px" src="{{ $friend->getAvatarUrl() }}" class="pull-left">
+											 		<img alt="" style="margin-right:10px" src="{{ $friend->getAvatarUrl() }}" class="pull-left profile-img">
 											 	</a>
 										        <div class="pull-left">
 										          <h4 class="media-heading">
@@ -82,7 +82,7 @@
 										 	<div class="panel-body">
 
 										 		<a href="{{ route('profile.index',['username' => $person->username]) }}">
-											 		<img alt="" style="margin-right:10px" src="{{ $person->getAvatarUrl() }}" class="pull-left">
+											 		<img alt="" style="margin-right:10px" src="{{ $person->getAvatarUrl() }}" class="pull-left profile-img">
 											 	</a>
 										        <div class="pull-left">
 										          <h4 class="media-heading">

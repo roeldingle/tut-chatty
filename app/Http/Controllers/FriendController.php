@@ -78,4 +78,11 @@ class FriendController extends Controller {
 
 	}
 
+
+	public function postDelete($username){
+		
+		$user = User::where('username', $username)->first();
+		return $user;
+	}
+
 }

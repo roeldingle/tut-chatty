@@ -49,6 +49,41 @@
 							</div>
 						</div>
 
+						<div class="form-group{{ $errors->has('fname') ? ' has-error' : '' }}">
+							<label class="col-md-4 control-label">First name</label>
+							<div class="col-md-6">
+								<input type="text" class="form-control" name="fname">
+							</div>
+						</div>
+
+						<div class="form-group{{ $errors->has('lname') ? ' has-error' : '' }}">
+							<label class="col-md-4 control-label">Last name</label>
+							<div class="col-md-6">
+								<input type="text" class="form-control" name="lname">
+							</div>
+						</div>
+
+						<div class="form-group">
+				    		<label for="gender" class="col-sm-3 col-md-3 control-label text-right">Gender</label>
+				    		<div class="col-sm-7 col-md-7">
+				    			<div class="input-group">
+				    				<div id="radioBtn" class="btn-group">
+				    					<a class="btn btn-primary btn-sm" data-toggle="gender" data-title="Male" >Male</a>
+				    					<a class="btn btn-primary btn-sm" data-toggle="gender" data-title="Female">Female</a>
+				    				</div>
+				    				<input type="hidden" name="gender" id="gender" value="">
+				    			</div>
+				    		</div>
+				    	</div>
+
+				    	<!-- Text input-->
+				          <div class="form-group{{ $errors->has('avatar') ? ' has-error' : '' }}">
+				            <!-- <label class="col-sm-2 control-label" for="textinput">E-Mail Address</label> -->
+				            <div class="col-sm-8 col-sm-offset-2">
+				              <input type="text" class="form-control" placeholder="Set an Avatar URL" name="avatar" value="">
+				            </div>
+				          </div>
+
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
 								<button type="submit" class="btn btn-primary">

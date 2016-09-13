@@ -15,6 +15,9 @@ class CreateLikeableCreate extends Migration {
 		Schema::create('likeable', function(Blueprint $table)
 		{
 			$table->increments('id');
+			$table->integer('user_id');
+			$table->integer('likeable_id');
+			$table->string('likeable_type');
 			$table->timestamps();
 		});
 	}
@@ -26,7 +29,7 @@ class CreateLikeableCreate extends Migration {
 	 */
 	public function down()
 	{
-		/Schema::drop('statuses');
+		Schema::drop('likeable');
 	}
 
 }
