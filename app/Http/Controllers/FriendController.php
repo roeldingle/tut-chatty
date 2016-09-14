@@ -82,7 +82,17 @@ class FriendController extends Controller {
 	public function postDelete($username){
 		
 		$user = User::where('username', $username)->first();
-		return $user;
+		
+		/*user is not friends with*/
+		if(!\Auth::user()->isFriendsWith($user)){
+			return redirect()->back();
+		}
+
+		/*delete*/
+		\Auth::user()->deleteFriend($user);
+		return redirect()
+			->back()
+			->with('info', 'Friend deleted.');
 	}
 
 }

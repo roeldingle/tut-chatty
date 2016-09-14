@@ -69,7 +69,9 @@
 													<p class="status-content">{{ $status->body }}</p>
 													<ul class="list-inline">
 														<li>{{ $status->created_at->diffForHumans() }}</li>
-							
+														@if($status->user->id !== Auth::user()->id)
+															<li><a href="{{ route('status.like', ['statusId' => $status->id ]) }}">Like</a></li>
+														@endif
 														<li>{{ $status->likes->count() }} {{ str_plural('like', $status->likes->count()) }}</li>
 													</ul>
 												</div>
@@ -136,7 +138,9 @@
 								</form>
 							@else
 								@if(Auth::user()->id != $users->first()->id)
-									<a href="{{ route('friend.add' , ['username' => $users->first()->username])}}" class="btn btn-primary">Add as friend</a>
+									<a href="{{ route('friend.add' , ['username' => $users->first()->username])}}" class="btn btn-primary">
+										Add {{$users->first()->getFullName()}} as friend
+									</a>
 								@endif
 							@endif
 

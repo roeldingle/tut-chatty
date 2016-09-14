@@ -235,6 +235,10 @@ class User extends Model implements AuthenticatableContract{
         return $this->friendOf()->attach($user->id);
     }
 
+    public function deleteFriend(User $user){
+        return $this->friendsOfMine()->detach($user->id);
+    }
+
     public function acceptFriendRequest(User $user){
         return $this->friendRequests()->where('id', $user->id)->first()->pivot->update([ 'accepted' => true, ]);
     }
